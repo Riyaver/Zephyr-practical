@@ -1,0 +1,56 @@
+/ {
+    custom_gpio {
+        compatible = "gpio-keys";
+
+        task1_led: task1_led {
+            gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+            label = "Task 1 LED";
+        };
+        task2_led: task2_led {
+            gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
+            label = "Task 2 LED";
+        };
+        task3_led: task3_led {
+            gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>;
+            label = "Task 3 LED";
+        };
+    };
+
+    chosen {
+        task1_led = &task1_led;
+        task2_led = &task2_led;
+        task3_led = &task3_led;
+        zephyr,display = &ssd1306;
+    };
+};
+
+
+/* TODO: Configure I2C for the SSD1306 display. 
+*  For reference, you may want to have a look at
+*  (1) zephyr/boards/espressif/esp32_devkitc/esp32_devkitc_procpu.dts
+*  (2) zephyr/boards/shields/ssd1306/ssd1306_128x64.overlay
+*  Hint: The ESP32 device tree does not provide a arduino_i2c definition as 
+*  assumed by (2), thus replace it with a suitable device tree entry from (1).
+*
+*  Afterwards, make sure that the reference in display.c is correctly resolved
+*  ```
+*  #define SSD1306 DT_CHOSEN(display)
+*  static const struct device *dev = DEVICE_DT_GET(SSD1306);
+*  ```
+*/
+&i2c0 {
+	status = "okay";
+
+	ssd1306: ssd1306@3c {
+		compatible = "solomon,ssd1306fb";
+		reg = <0x3c>;
+		width = <128>;
+		height = <64>;
+		segment-offset = <2>;
+		page-offset = <0>;
+		display-offset = <0>;
+		multiplex-ratio = <63>;
+		segment-remap;
+		com-invdir;
+		prechargep = <0x22>;
+	};

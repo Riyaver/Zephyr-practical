@@ -1,0 +1,61 @@
+/ {
+    custom_gpio {
+        compatible = "gpio-keys";
+
+        task1_led: task1_led {
+            gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+            label = "Task 1 LED";
+        };
+        task2_led: task2_led {
+            gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
+            label = "Task 2 LED";
+        };
+        task3_led: task3_led {
+            gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>;
+            label = "Task 3 LED";
+        };
+    };
+
+    buttons {
+        compatible = "gpio-keys";
+
+        user_button: user_button {
+            gpios = <&gpio0 15 GPIO_ACTIVE_LOW>;
+            label = "User Button";
+        };
+    };
+
+    chosen {
+        task1_led = &task1_led;
+        task2_led = &task2_led;
+        task3_led = &task3_led;
+        display = &ssd1306;
+    };
+};
+/* --- I2C0 configuration --- */
+&i2c0 {
+    status = "okay";
+    clock-frequency = <I2C_BITRATE_STANDARD>;
+    sda-gpios = <&gpio0 21 GPIO_OPEN_DRAIN>;
+    scl-gpios = <&gpio0 22 GPIO_OPEN_DRAIN>;
+    pinctrl-0 = <&i2c0_default>;
+    pinctrl-names = "default";
+
+    /* SSD1306 128x64 display attached to I2C0 */
+    ssd1306: ssd1306@3c {
+        compatible = "solomon,ssd1306fb";
+        reg = <0x3c>;
+        width = <128>;
+        height = <64>;
+        segment-offset = <0>;
+        page-offset = <0>;
+        display-offset = <0>;
+        multiplex-ratio = <63>;
+        segment-remap;
+        com-invdir;
+        /* REMOVE com-sequential for 128x64 displays */
+        prechargep = <0x22>;
+        
+        status = "okay";
+    };
+};

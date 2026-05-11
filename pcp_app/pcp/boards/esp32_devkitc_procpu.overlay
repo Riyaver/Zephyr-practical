@@ -1,0 +1,27 @@
+/ {
+    custom_gpio {
+        compatible = "gpio-keys";
+
+        task1_led: task1_led {
+            gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+            label = "Task 1 LED";
+        };
+        task2_led: task2_led {
+            gpios = <&gpio0 17 GPIO_ACTIVE_HIGH>;
+            label = "Task 2 LED";
+        };
+        task3_led: task3_led {
+            gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>;
+            label = "Task 3 LED";
+        };
+    };
+
+    chosen {
+        task1_led = &task1_led;
+        task2_led = &task2_led;
+        task3_led = &task3_led;
+        // display = &ssd1306;
+    };
+};
+
+// Optional: Add your SSD1306 configuration from the previous assignments and uncomment the *display* line above 
